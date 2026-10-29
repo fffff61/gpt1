@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10242b">
+<meta name="description" content="横屏像素防守游戏：守护神域之心，抵御八波怪潮，升级技能与装备，挑战铁角守卫。">
+<title>神域守卫 · 像素防线</title>
+<link rel="icon" href="index.icon.png">
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png">
+<link rel="manifest" href="index.manifest.json">
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b1b22;color:#e1dfc9;font-family:system-ui,"Microsoft YaHei",sans-serif;touch-action:none}
+#canvas{display:block;width:100%;height:100%;outline:none}button{font:inherit}a{color:#cfb47c}
+#loading,#rotate{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 45%,#203e40,#0b1b22 72%);z-index:10;text-align:center;padding:28px}
+[hidden]{display:none!important}.mark{width:100px;height:100px;image-rendering:pixelated;margin-bottom:18px;filter:drop-shadow(0 10px 24px #55bcae22)}
+.eyebrow{font-size:11px;letter-spacing:.3em;color:#cfb47c}.title{font-weight:500;letter-spacing:.13em;font-size:38px;margin:15px 0 8px}.subtitle{color:#83b4a6;font-size:14px;letter-spacing:.2em;margin:0 0 32px}
+.track{width:min(320px,75vw);height:5px;background:#29453f;border:1px solid #4c665b}.fill{width:0;height:100%;background:#a4c7a8;transition:width .15s}
+#progress-text{font-size:13px;color:#a1b7ab;margin-top:16px}.hint{max-width:480px;margin:30px 0 0;font-size:13px;color:#8da79f;line-height:1.9}.error{color:#e9a38d!important;white-space:pre-wrap}
+#rotate{z-index:20;display:none}.phone{font-size:50px;line-height:1;transform:rotate(90deg);color:#cfb47c;margin-bottom:18px}
+#cache-notice{position:fixed;left:50%;bottom:17%;transform:translateX(-50%);z-index:9;background:#10242bee;border:1px solid #657e70;padding:10px 22px;font-size:13px;color:#cfe0c4;white-space:nowrap;pointer-events:none}
+@media(orientation:portrait) and (max-width:900px){#rotate{display:flex}.title{font-size:30px}}
+</style>
+</head>
+<body>
+<canvas id="canvas" tabindex="0" aria-label="神域守卫游戏画面">请使用支持 WebGL 2 的浏览器。</canvas>
+<section id="loading" aria-live="polite">
+<img class="mark" src="index.144x144.png" alt="神域之心">
+<div class="eyebrow">REALM GUARD</div><h1 class="title">神域守卫</h1><p class="subtitle">像素防线 · 单人战役</p>
+<div class="track"><div class="fill" id="progress"></div></div>
+<div id="progress-text">正在唤醒神域之心…</div>
+<p class="hint">手机请横屏，左侧摇杆移动，右侧释放技能。<br>首次加载约 19 MB；资源缓存完成后可离线游玩。<br>进度保存在当前浏览器中。</p>
+</section>
+<section id="rotate"><div class="phone">▯</div><h2 class="title">请横屏守卫神域</h2><p class="hint">关闭手机的竖屏锁定，再将手机横放。<br>可通过浏览器菜单添加到主屏幕。</p></section>
+<div id="cache-notice" role="status" hidden>资源已缓存，可在此浏览器中离线游玩</div>
+<noscript>请开启 JavaScript 后游玩。</noscript>
+<script src="index.js"></script>
+<script>
+const GODOT_CONFIG = {"args": [], "canvasResizePolicy": 2, "emscriptenPoolSize": 8, "ensureCrossOriginIsolationHeaders": false, "executable": "index", "experimentalVK": false, "fileSizes": {"index.pck": 8798240, "index.wasm": 37700666}, "focusCanvas": true, "gdextensionLibs": [], "godotPoolSize": 4, "serviceWorker": "index.service.worker.js"};
+const engine = new Engine(GODOT_CONFIG);
+const loading = document.querySelector('#loading');
+const progressText = document.querySelector('#progress-text');
+const missing = Engine.getMissingFeatures({threads:false});
+if (!('DecompressionStream' in window)) missing.push('gzip 解压支持');
+if (missing.length) {
+    progressText.className='error';
+    progressText.textContent='当前浏览器缺少：'+missing.join('、')+'。请使用新版 Chrome 浏览器。';
+} else {
+    engine.startGame({onProgress(current,total){
+        if(total>0){
+            const percent=Math.min(100,Math.round(current/total*100));
+            document.querySelector('#progress').style.width=percent+'%';
+            progressText.textContent=percent<100?'正在载入战场 · '+percent+'%':'正在进入神域…';
+        }
+    }}).then(()=>{
+        loading.hidden=true;
+        document.querySelector('#canvas').focus();
+    },error=>{
+        progressText.className='error';
+        progressText.textContent='加载未完成：'+error.message+'。请联网后刷新页面。';
+    });
+    navigator.serviceWorker.ready.then(()=>{
+        const notice=document.querySelector('#cache-notice');
+        notice.hidden=false;
+        setTimeout(()=>{notice.hidden=true},5000);
+    });
+}
+</script>
+</body></html>
