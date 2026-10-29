@@ -1,0 +1,22 @@
+name: Package verified standalone download
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/package-download.yml
+      - downloads/使用说明.txt
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RealmGuard-Offline-HTML
+          path: |
+            downloads/RealmGuard-Standalone.html
+            downloads/使用说明.txt
+          compression-level: 9
+          retention-days: 30

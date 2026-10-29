@@ -2,6 +2,10 @@ name: Deliver Realm Guard
 on:
   push:
     branches: [main]
+    paths:
+      - downloads/RealmGuard-Standalone.html
+      - tools/build_standalone.py
+      - tools/test_standalone.py
   workflow_dispatch:
 permissions:
   contents: read
