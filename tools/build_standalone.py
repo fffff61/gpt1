@@ -12,11 +12,11 @@ function embeddedResponse(path){
 }
 const embeddedWorklets={};
 for(const name of ['index.audio.worklet.js','index.audio.position.worklet.js']){
- const source=atob(embeddedAssets[name]);
- embeddedWorklets[name]=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));
+ embeddedWorklets[name]='data:text/javascript;base64,'+embeddedAssets[name];
 }
 '''.replace('__ASSETS__',json.dumps(assets,separators=(',',':')))
 js=(dist/'index.js').read_text().replace("? fetch(file + '.gz').then(response", "? embeddedResponse(file + '.gz').then(response").replace(': fetch(file);',': embeddedResponse(file);')
+js=re.sub(r'function _godot_js_pwa_cb\(p_update_cb\)\{.*?\}function _godot_js_pwa_update','function _godot_js_pwa_cb(p_update_cb){}function _godot_js_pwa_update',js,count=1)
 js=js.replace('return `${loadPath}.audio.worklet.js`;','return embeddedWorklets["index.audio.worklet.js"];').replace('return `${loadPath}.audio.position.worklet.js`;','return embeddedWorklets["index.audio.position.worklet.js"];')
 html=(dist/'index.html').read_text()
 html=re.sub(r'<link[^>]+rel="manifest"[^>]*>','',html)
