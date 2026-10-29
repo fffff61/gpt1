@@ -4,7 +4,9 @@
 
 游戏包含八波防守、四向角色行走、三个技能、六件装备、BOSS 挑战和本地存档。
 
-当前 ChatGPT Sites 域名在用户浏览器中出现 ERR_FAILED，正在准备备用发布和离线交付。
+在线试玩：https://fffff61.github.io/gpt1/
+
+GitHub Pages 已发布，外部真实浏览器实测 HTTP 200、引擎及资源加载、进入战场通过，浏览器 pageerror 为 0。原 ChatGPT Sites 域名在用户浏览器中出现 ERR_FAILED，请使用上述新地址。
 
 ## 独立离线版
 
@@ -14,4 +16,4 @@
 
 ## 已完成验证
 
-Windows Microsoft Edge 已实测直接打开独立 HTML、保存、断网重载及继续进度，外部网络请求为零。下载包解压一次后打开 HTML 即可。在线备用部署需要仓库所有者先在 Settings → Pages 中将 Source 设为 GitHub Actions，然后运行 Actions → Publish Realm Guard Web。当前 GitHub 集成没有启用 Pages 的管理权限；此前的自动启用尝试返回 Resource not accessible by integration。
+Windows Microsoft Edge 已实测直接打开独立 HTML、保存、断网重载及继续进度，外部网络请求为零。下载包解压一次后打开 HTML 即可。在线备用部署需要仓库所有者先在 Settings → Pages 中将 Source 设为 GitHub Actions，然后运行 Actions → Publish Realm Guard Web。仓库所有者已启用 GitHub Actions 作为 Pages 来源，部署与真实浏览器检查现已通过。
