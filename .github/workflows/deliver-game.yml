@@ -7,13 +7,22 @@ permissions:
   contents: read
 jobs:
   offline-package:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install playwright
+      - name: Verify local HTML in Microsoft Edge
+        run: python tools/test_standalone.py
       - uses: actions/upload-artifact@v4
         with:
           name: RealmGuard-Standalone
-          path: downloads/RealmGuard-Standalone.zip
+          path: |
+            downloads/RealmGuard-Standalone.zip
+            downloads/standalone-title.png
+            downloads/standalone-resumed.png
           compression-level: 0
           retention-days: 30
   publish-pages:
